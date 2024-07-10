@@ -23,7 +23,7 @@ from .const import (
     KEY_FILENAME,
     NAME,
 )
-from .reclaimv2 import obtain_aws_keys
+from .reclaimv2 import obtain_aws_keys, validate_unique_id
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,6 +59,9 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
 
+    if not validate_unique_id(data[CONF_UNIQUE_ID]):
+        raise InvalidIdentifier
+
     # obtain AWS keys
     cacertpath = hass.config.path(CACERT_FILENAME)
     certpath = hass.config.path(CERT_FILENAME)
@@ -93,6 +96,8 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "cannot_connect"
             except InvalidAuth:
                 errors["base"] = "invalid_auth"
+            except InvalidIdentifier:
+                errors["base"] = "invalid_id"
             except Exception:
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
@@ -109,4 +114,8 @@ class CannotConnect(HomeAssistantError):
 
 
 class InvalidAuth(HomeAssistantError):
-    """Error to indicate there is invalid auth."""
+    """Error to indicate unable to authenticate."""
+
+
+class InvalidIdentifier(HomeAssistantError):
+    """Error to indicate user has entered an invalid ID."""

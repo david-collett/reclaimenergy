@@ -18,6 +18,36 @@ AWS_PORT = 8883
 _LOGGER = logging.getLogger(__name__)
 
 
+def validate_unique_id(id: str) -> bool:
+    """Validate the Reclaim unit unique ID."""
+
+    # id is a 17 characters long integer
+    if not id.isnumeric() or len(id) != 17:
+        return False
+
+    # convert to hex string
+    hexstr = f"{int(id):#014x}"[2:]
+
+    # build the lookup table used by the checksum
+    lut = []
+    key = 47
+    for x in range(256):
+        i = x
+        for _y in range(8):
+            j = i & 128
+            i <<= 1
+            if j != 0:
+                i ^= key
+        lut.append(i & 255)
+
+    # calculate the checksum
+    cksum = 0
+    for x in range(len(hexstr) - 2):
+        cksum = lut[(cksum ^ ord(hexstr[x])) & 255]
+
+    return int(hexstr[-2:], 16) == cksum
+
+
 def obtain_aws_keys() -> tuple:
     """Authenticate to AWS and obtain iot certs for mqtt."""
 
@@ -66,7 +96,7 @@ class MessageListener:
 class ReclaimV2:
     """ReclaimV2 HPHWS Controller."""
 
-    def __init__(self, unique_id: str, cacert: str, certificate: str, key: str) -> None:
+    def __init__(self, unique_id: int, cacert: str, certificate: str, key: str) -> None:
         """Initialize."""
         self.unique_id = unique_id
         self.cacert = cacert
@@ -76,8 +106,10 @@ class ReclaimV2:
         self._client = None
         self._connected = False
         self._listener_task = None
-        self.subscribe_topic = f"dontek{hex(self.unique_id)[2:-2]!s}/status/psw"
-        self.command_topic = f"dontek{hex(self.unique_id)[2:-2]!s}/cmd/psw"
+
+        hexid = f"{self.unique_id:#014x}"[2:-2]
+        self.subscribe_topic = f"dontek{hexid}/status/psw"
+        self.command_topic = f"dontek{hexid}/cmd/psw"
 
     def connect(self, listener: MessageListener) -> None:
         """Connect to MQTT server and subscribe for updates."""
@@ -128,6 +160,7 @@ class ReclaimV2:
             if payload["messageId"] == "read" and payload["modbusReg"] == 1:
                 raw = payload["modbusVal"]
                 data = {raw[i]: raw[i + 1] for i in range(0, len(raw), 2)}
+                _LOGGER.debug("Received modbus data: %s", data)
                 state = ReclaimState(
                     data[200], data[79] / 2, data[223] / 2, data[225], data[40990]
                 )
