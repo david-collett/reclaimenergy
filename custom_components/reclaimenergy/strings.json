@@ -1,0 +1,39 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "unique_id": "Unique Device ID"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "heatpump_state": {
+        "name": "Heat Pump State"
+      }
+    },
+    "sensor": {
+      "water_temperature": {
+        "name": "Water Temperature"
+      },
+      "ambient_temperature": {
+        "name": "Ambient Temperature"
+      }
+    },
+    "switch": {
+      "boost_switch": {
+        "name": "Boost"
+      }
+    }
+  }
+}

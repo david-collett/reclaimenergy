@@ -1,0 +1,39 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "invalid_auth": "Invalid authentication",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "unique_id": "Unique Device ID"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "heatpump_state": {
+                "name": "Heat Pump State"
+            }
+        },
+        "sensor": {
+            "ambient_temperature": {
+                "name": "Ambient Temperature"
+            },
+            "water_temperature": {
+                "name": "Water Temperature"
+            }
+        },
+        "switch": {
+            "boost_switch": {
+                "name": "Boost"
+            }
+        }
+    }
+}
