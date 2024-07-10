@@ -26,7 +26,7 @@ def validate_unique_id(id: str) -> bool:
         return False
 
     # convert to hex string
-    hexstr = f"{int(id):#014x}"[2:]
+    hexstr = f"{int(id):#014x}"[2:].zfill(14)
 
     # build the lookup table used by the checksum
     lut = []
@@ -107,7 +107,7 @@ class ReclaimV2:
         self._connected = False
         self._listener_task = None
 
-        hexid = f"{self.unique_id:#014x}"[2:-2]
+        hexid = f"{self.unique_id:#014x}"[2:-2].zfill(12)
         self.subscribe_topic = f"dontek{hexid}/status/psw"
         self.command_topic = f"dontek{hexid}/cmd/psw"
 
