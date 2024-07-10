@@ -23,7 +23,7 @@ from .const import (
     KEY_FILENAME,
     NAME,
 )
-from .reclaimv2 import ReclaimV2, obtain_aws_keys
+from .reclaimv2 import obtain_aws_keys
 
 _LOGGER = logging.getLogger(__name__)
 

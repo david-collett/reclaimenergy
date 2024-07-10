@@ -1,7 +1,7 @@
 """ReclaimV2 Components."""
 
 from homeassistant.const import CONF_UNIQUE_ID
-from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN

@@ -45,10 +45,10 @@ def obtain_aws_keys() -> tuple:
 
         cert = keys["certificatePem"]
         key = keys["keyPair"]["PrivateKey"]
-
-        return (identity, cert, key)
     except botocore.exceptions.ClientError:
         return None
+    else:
+        return (identity, cert, key)
 
 
 ReclaimState = namedtuple(
@@ -61,7 +61,6 @@ class MessageListener:
 
     def on_message(self, state: ReclaimState) -> None:
         """Process device state updates."""
-        pass
 
 
 class ReclaimV2:
@@ -99,7 +98,7 @@ class ReclaimV2:
                 async with aiomqtt.Client(
                     hostname=AWS_HOSTNAME, port=AWS_PORT, tls_params=aws_tls_params
                 ) as self._client:
-                    _LOGGER.info("Connected, subscribing to %s", self.subscribe_topic)
+                    _LOGGER.debug("Connected, subscribing to %s", self.subscribe_topic)
                     await self._client.subscribe(self.subscribe_topic)
 
                     # request initial update
@@ -124,8 +123,6 @@ class ReclaimV2:
         self._client = None
 
     def _process_message(self, message, listener: MessageListener):
-        # _LOGGER.info("Processing Message: %s", message.payload)
-        _LOGGER.info("Processing Message")
         try:
             payload = json.loads(message.payload)
             if payload["messageId"] == "read" and payload["modbusReg"] == 1:
@@ -137,7 +134,7 @@ class ReclaimV2:
                 listener.on_message(state)
             else:
                 _LOGGER.warning("Unknown payload: %s", payload)
-        except Exception as e:
+        except (json.JSONDecodeError, IndexError, AttributeError) as e:
             _LOGGER.error("Error processing payload(%s): %s", e, message.payload)
 
     async def request_update(self) -> None:
@@ -147,32 +144,41 @@ class ReclaimV2:
             return
 
         if self._client:
-            await self._client.publish(
-                self.command_topic,
-                json.dumps({"messageId": "read", "modbusReg": 1, "modbusVal": [1]}),
-                qos=1,
-            )
+            try:
+                await self._client.publish(
+                    self.command_topic,
+                    json.dumps({"messageId": "read", "modbusReg": 1, "modbusVal": [1]}),
+                    qos=1,
+                )
+            except aiomqtt.exceptions.MqttError as e:
+                _LOGGER.error("Error publishing update request: %s", e)
 
     async def set_boost(self, boost: bool) -> None:
         """Send MQTT update request to controller."""
         if not self._connected:
+            _LOGGER.warning("Not connected")
             return
 
         if self._client:
-            await self._client.publish(
-                self.command_topic,
-                json.dumps(
-                    {
-                        "messageId": "write",
-                        "modbusReg": 40990,
-                        "modbusVal": [1 if boost else 0],
-                    }
-                ),
-                qos=1,
-            )
+            try:
+                await self._client.publish(
+                    self.command_topic,
+                    json.dumps(
+                        {
+                            "messageId": "write",
+                            "modbusReg": 40990,
+                            "modbusVal": [1 if boost else 0],
+                        }
+                    ),
+                    qos=1,
+                )
+            except aiomqtt.exceptions.MqttError as e:
+                _LOGGER.error("Error publishing boost request: %s", e)
 
 
 async def main():
+    """Test harness."""
+
     class LogMessageListener(MessageListener):
         def on_message(self, state: ReclaimState) -> None:
             _LOGGER.info(state)
