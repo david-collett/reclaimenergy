@@ -14,5 +14,6 @@
     "aiomqtt==2.0.1"
   ],
   "ssdp": [],
-  "zeroconf": []
+  "zeroconf": [],
+  "version": "0.0.1"
 }
