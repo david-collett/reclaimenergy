@@ -162,7 +162,7 @@ class ReclaimV2:
                 data = {raw[i]: raw[i + 1] for i in range(0, len(raw), 2)}
                 _LOGGER.debug("Received modbus data: %s", data)
                 state = ReclaimState(
-                    data[200], data[79] / 2, data[233] / 2, data[225], data[40990]
+                    data[200], data[79] / 2, data[218], data[225], data[40990]
                 )
                 listener.on_message(state)
             else:
