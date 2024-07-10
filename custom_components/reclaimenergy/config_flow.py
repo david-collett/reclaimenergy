@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
+import os
 from typing import Any
 
 import voluptuous as vol
@@ -63,9 +65,13 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         raise InvalidIdentifier
 
     # obtain AWS keys
-    cacertpath = hass.config.path(CACERT_FILENAME)
-    certpath = hass.config.path(CERT_FILENAME)
-    keypath = hass.config.path(KEY_FILENAME)
+    basepath = hass.config.path(DOMAIN)
+    with contextlib.suppress(FileExistsError):
+        os.mkdir(hass.config.path(DOMAIN))
+
+    cacertpath = os.path.join(basepath, CACERT_FILENAME)
+    certpath = os.path.join(basepath, CERT_FILENAME)
+    keypath = os.path.join(basepath, KEY_FILENAME)
     if not await hass.async_add_executor_job(
         obtain_and_save_aws_keys, cacertpath, certpath, keypath
     ):
