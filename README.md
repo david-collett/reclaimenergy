@@ -1,5 +1,7 @@
 # Reclaim Energy Heat Pump (v2) Integration
 
+![Example Screenshot](example.png)
+
 This integration supports heat pump hot water systems from Reclaim Energy which
 use the wifi-enabled "v2" controller.
 
