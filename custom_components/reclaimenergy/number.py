@@ -36,6 +36,7 @@ async def async_setup_entry(
 class ReclaimV2DurationBase(ReclaimV2Entity, NumberEntity):
     """Represents the timer parameters of the heat pump."""
 
+    _attr_entity_registry_enabled_default = False
     _attr_native_max_value = 12
     _attr_native_min_value = 3
     _attr_native_step = 1

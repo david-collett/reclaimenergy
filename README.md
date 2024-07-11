@@ -11,12 +11,11 @@ It currently exposes the following entities:
 - Power
 - Boost switch (Current boost state and ability to turn boost on and off)
 
+Additional controls are also available, but disabled by default.
+
 To integrate the Power sensor into the energy dashboard, use the "Integral
 Sensor" helper to create a Left Riemann sum sensor based on the reclaim power
 sensor, this will produce accumulating KWh for use in energy dashboard.
-
-Changing / configuring operating modes is not currently supported but may be
-in the future.
 
 # Installation
 

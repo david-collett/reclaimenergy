@@ -39,6 +39,10 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 def obtain_and_save_aws_keys(cacertpath: str, certpath: str, keypath: str) -> bool:
     """Obtain AWS Credentials."""
 
+    if os.path.exists(keypath):
+        _LOGGER.warning("Keys already exists, not regenerating")
+        return True
+
     result = obtain_aws_keys()
     if not result:
         return False

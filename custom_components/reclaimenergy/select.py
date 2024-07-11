@@ -51,6 +51,7 @@ class DaySelect(ReclaimV2Entity, SelectEntity):
     _attr_translation_key = "mode8_day"
     _attr_options = ReclaimState.days
     _attr_current_option = _attr_options[0]
+    _attr_entity_registry_enabled_default = False
 
     @callback
     def _handle_coordinator_update(self) -> None:

@@ -25,7 +25,7 @@ async def async_setup_entry(
             Mode5Timer1Start(coordinator=entry.runtime_data),
             Mode5Timer2Start(coordinator=entry.runtime_data),
             Mode6Timer1Start(coordinator=entry.runtime_data),
-            Mode6Timer1Start(coordinator=entry.runtime_data),
+            Mode6Timer2Start(coordinator=entry.runtime_data),
             Mode7Start(coordinator=entry.runtime_data),
             Mode8Start(coordinator=entry.runtime_data),
         ]
@@ -35,6 +35,7 @@ async def async_setup_entry(
 class ReclaimV2TimerBase(ReclaimV2Entity, TimeEntity):
     """Represents the timer parameters of the heat pump."""
 
+    _attr_entity_registry_enabled_default = False
     _attr_native_value = time(hour=0)
 
     @callback
