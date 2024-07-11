@@ -33,8 +33,6 @@ class HeatPumpSensor(ReclaimV2Entity, BinarySensorEntity):
 
     @callback
     def _handle_coordinator_update(self) -> None:
-        try:
+        if hasattr(self.coordinator.data, "pump"):
             self._attr_is_on = self.coordinator.data.pump
             self.async_write_ha_state()
-        except AttributeError:
-            _LOGGER.warning("Bad data!")

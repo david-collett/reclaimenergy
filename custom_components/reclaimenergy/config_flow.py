@@ -56,11 +56,9 @@ def obtain_and_save_aws_keys(cacertpath: str, certpath: str, keypath: str) -> bo
 
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
-    """Validate the user input allows us to connect.
+    """Validate the provided user data and test authentication."""
 
-    Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
-    """
-
+    # test that the provided ID is valid
     if not validate_unique_id(data[CONF_UNIQUE_ID]):
         raise InvalidIdentifier
 
@@ -76,7 +74,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         obtain_and_save_aws_keys, cacertpath, certpath, keypath
     ):
         raise InvalidAuth
-    # Return info that you want to store in the config entry.
+
     return {
         CONF_UNIQUE_ID: data[CONF_UNIQUE_ID],
         CONF_CACERT_PATH: cacertpath,
@@ -98,8 +96,6 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 info = await validate_input(self.hass, user_input)
-            except CannotConnect:
-                errors["base"] = "cannot_connect"
             except InvalidAuth:
                 errors["base"] = "invalid_auth"
             except InvalidIdentifier:
@@ -113,10 +109,6 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
         )
-
-
-class CannotConnect(HomeAssistantError):
-    """Error to indicate we cannot connect."""
 
 
 class InvalidAuth(HomeAssistantError):

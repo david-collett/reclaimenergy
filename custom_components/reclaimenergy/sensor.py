@@ -37,11 +37,9 @@ class WaterTempSensor(ReclaimV2Entity, SensorEntity):
 
     @callback
     def _handle_coordinator_update(self) -> None:
-        try:
+        if hasattr(self.coordinator.data, "water"):
             self._attr_native_value = self.coordinator.data.water
             self.async_write_ha_state()
-        except AttributeError:
-            _LOGGER.warning("Bad data!")
 
 
 class AmbientTempSensor(ReclaimV2Entity, SensorEntity):
@@ -53,11 +51,9 @@ class AmbientTempSensor(ReclaimV2Entity, SensorEntity):
 
     @callback
     def _handle_coordinator_update(self) -> None:
-        try:
+        if hasattr(self.coordinator.data, "ambient"):
             self._attr_native_value = self.coordinator.data.ambient
             self.async_write_ha_state()
-        except AttributeError:
-            _LOGGER.warning("Bad data!")
 
 
 class PowerSensor(ReclaimV2Entity, SensorEntity):
@@ -69,8 +65,6 @@ class PowerSensor(ReclaimV2Entity, SensorEntity):
 
     @callback
     def _handle_coordinator_update(self) -> None:
-        try:
+        if hasattr(self.coordinator.data, "power"):
             self._attr_native_value = self.coordinator.data.power
             self.async_write_ha_state()
-        except AttributeError:
-            _LOGGER.warning("Bad data!")

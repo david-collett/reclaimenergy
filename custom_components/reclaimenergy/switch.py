@@ -31,16 +31,14 @@ class BoostSwitch(ReclaimV2Entity, SwitchEntity):
 
     @callback
     def _handle_coordinator_update(self) -> None:
-        try:
+        if hasattr(self.coordinator.data, "boost"):
             self._attr_is_on = self.coordinator.data.boost
             self.async_write_ha_state()
-        except AttributeError:
-            _LOGGER.warning("Bad data!")
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on Boost Mode."""
-        await self.coordinator.api.set_boost(True)
+        await self.coordinator.api.set_value("boost", True)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off Boost Mode."""
-        await self.coordinator.api.set_boost(False)
+        await self.coordinator.api.set_value("boost", False)

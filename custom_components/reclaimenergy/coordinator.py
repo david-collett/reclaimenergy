@@ -1,5 +1,6 @@
 """ReclaimV2 DataUpdateCoordinator."""
 
+import contextlib
 from datetime import timedelta
 import logging
 
@@ -23,7 +24,8 @@ class ReclaimMessageListener(MessageListener):
 
     def on_message(self, state: ReclaimState) -> None:
         """Handle incoming messages."""
-        self.coordinator.set_update_interval(fast=state.pump or state.power)
+        with contextlib.suppress(AttributeError):
+            self.coordinator.set_update_interval(fast=state.pump or state.power)
         self.coordinator.async_set_updated_data(state)
 
 

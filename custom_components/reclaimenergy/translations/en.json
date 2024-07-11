@@ -4,7 +4,6 @@
             "already_configured": "Device is already configured"
         },
         "error": {
-            "cannot_connect": "Failed to connect",
             "invalid_auth": "Invalid authentication",
             "invalid_id": "Device ID is invalid",
             "unknown": "Unexpected error"
@@ -34,6 +33,60 @@
         "switch": {
             "boost_switch": {
                 "name": "Boost"
+            }
+        },
+        "select": {
+            "operating_mode": {
+                "name": "Operating Mode"
+            },
+            "mode8_day": {
+                "name": "Mode 8 Day"
+            }
+        },
+        "time": {
+            "mode5_timer1_start": {
+                "name": "Mode 5 Start (Timer 1)"
+            },
+            "mode5_timer2_start": {
+                "name": "Mode 5 Start (Timer 2)"
+            },
+            "mode6_timer1_start": {
+                "name": "Mode 6 Start (Timer 1)"
+            },
+            "mode6_timer2_start": {
+                "name": "Mode 6 Start (Timer 2)"
+            },
+            "mode7_start": {
+                "name": "Mode 7 Start"
+            },
+            "mode8_start": {
+                "name": "Mode 8 Start"
+            }
+        },
+        "number": {
+            "mode5_timer1_duration": {
+                "name": "Mode 5 Duration (Timer 1)"
+            },
+            "mode5_timer2_duration": {
+                "name": "Mode 5 Duration (Timer 2)"
+            },
+            "mode5_timer2_on_temp": {
+                "name": "Mode 5 On Temp (Timer 2)"
+            },
+            "mode6_timer1_duration": {
+                "name": "Mode 6 Duration (Timer 1)"
+            },
+            "mode6_timer2_duration": {
+                "name": "Mode 6 Duration (Timer 2)"
+            },
+            "mode6_timer2_on_temp": {
+                "name": "Mode 6 On Temp (Timer 2)"
+            },
+            "mode6_timer2_off_temp": {
+                "name": "Mode 6 Off Temp (Timer 2)"
+            },
+            "mode7_duration": {
+                "name": "Mode 7 Duration"
             }
         }
     }
