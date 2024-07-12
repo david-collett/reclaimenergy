@@ -23,11 +23,44 @@
             }
         },
         "sensor": {
-            "ambient_temperature": {
+            "outlet": {
+                "name": "Outlet Temperature"
+            },
+            "inlet": {
+                "name": "Inlet Temperature"
+            },
+            "discharge": {
+                "name": "Discharge Temperature"
+            },
+            "suction": {
+                "name": "Suction Temperature"
+            },
+            "evaporator": {
+                "name": "Evaporator Temperature"
+            },
+            "ambient": {
                 "name": "Ambient Temperature"
             },
-            "water_temperature": {
+            "water": {
                 "name": "Water Temperature"
+            },
+            "case": {
+                "name": "Case Temperature"
+            },
+            "hours": {
+                "name": "Compressor Total Hours"
+            },
+            "starts": {
+                "name": "Compressor Total Cycles"
+            },
+            "fanspeed": {
+                "name": "Fan Speed"
+            },
+            "compspeed": {
+                "name": "Compressor Speed"
+            },
+            "waterspeed": {
+                "name": "Water Pump Speed"
             }
         },
         "switch": {

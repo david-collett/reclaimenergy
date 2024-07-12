@@ -81,6 +81,11 @@ def obtain_aws_keys() -> tuple:
         return (identity, cert, key)
 
 
+def ushort(x: int):
+    """Convert python int to it's unsigned short value."""
+    return x - 65536 if x & 0x8000 else x
+
+
 class ReclaimState:
     """Represents the current system state."""
 
@@ -104,9 +109,21 @@ class ReclaimState:
             lambda x: ReclaimState.modes.index(x) + 2,
         ),
         "pump": (200, None, None),
-        "water": (79, lambda x: x / 2, lambda x: x * 2),
-        "ambient": (218, None, None),
+        "case": (50, lambda x: ushort(int(x / 2)), None),
+        "water": (79, lambda x: ushort(int(x / 2)), None),
+        "outlet": (213, ushort, None),
+        "inlet": (214, ushort, None),
+        "discharge": (215, ushort, None),
+        "suction": (216, ushort, None),
+        "evaporator": (217, ushort, None),
+        "ambient": (218, ushort, None),
+        "compspeed": (219, None, None),
+        "waterspeed": (220, None, None),
+        "fanspeed": (221, None, None),
         "power": (225, None, None),
+        "current": (226, lambda x: x / 1000, None),
+        "hours": (222, None, None),
+        "starts": (223, None, None),
         "boost": (40990, bool, int),
         "mode5_timer1_start": (40971, lambda x: int(x / 256), lambda x: x * 256),
         "mode5_timer1_duration": (40972, lambda x: int(x / 256), lambda x: x * 256),
@@ -202,9 +219,10 @@ class ReclaimV2:
             except aiomqtt.MqttError as mqtt_err:
                 _LOGGER.warning("Waiting for retry, error: %s", mqtt_err)
                 self._client = None
-                await asyncio.sleep(5)
             except Exception as e:  # noqa: BLE001
                 _LOGGER.error("Exception in MQTT loop: %s", e)
+            finally:
+                await asyncio.sleep(5)
 
     async def disconnect(self) -> None:
         """Disconnect from MQTT Server."""
@@ -259,12 +277,14 @@ class ReclaimV2:
             _LOGGER.warning("Not connected")
             return
 
+        entry = ReclaimState.modbus_map[name]
+        if not entry[2]:
+            _LOGGER.warning("This value is readonly and cannot be set")
+            return
+
         if self._client:
             try:
-                entry = ReclaimState.modbus_map[name]
-                if entry[2]:
-                    value = entry[2](value)
-
+                value = entry[2](value)
                 await self._client.publish(
                     self.command_topic,
                     json.dumps(
