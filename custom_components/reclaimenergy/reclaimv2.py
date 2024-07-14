@@ -230,6 +230,10 @@ class ReclaimV2:
             return
         self._connected = False
         self._listener_task.cancel()
+        try:
+            await self._listener_task
+        except asyncio.CancelledError:
+            _LOGGER.debug("listener is cancelled")
         self._listener_task = None
         self._client = None
 

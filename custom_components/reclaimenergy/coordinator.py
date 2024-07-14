@@ -76,3 +76,8 @@ class ReclaimV2Coordinator(DataUpdateCoordinator[ReclaimState]):
 
     async def _async_request_update(self, _):
         await self.api.request_update()
+
+    async def shutdown(self):
+        """Shutdown the API."""
+        if self.api:
+            await self.api.disconnect()
