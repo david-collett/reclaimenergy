@@ -10,9 +10,9 @@ import aiomqtt
 import boto3
 import botocore
 
-AWS_REGION_NAME = ""
-AWS_IDENTITY_POOL = ""
-AWS_HOSTNAME = ""
+AWS_REGION_NAME = "ap-southeast-2"
+AWS_IDENTITY_POOL = "ap-southeast-2:e04c5d62-0c40-4eac-a343-27d5f76c4920"
+AWS_HOSTNAME = "a254daig9zo2wn-ats.iot.ap-southeast-2.amazonaws.com"
 AWS_PORT = 8883
 
 _LOGGER = logging.getLogger(__name__)
