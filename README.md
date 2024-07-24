@@ -21,4 +21,16 @@ sensor, this will produce accumulating KWh for use in energy dashboard.
 
 # Installation
 
-TODO
+The simplest method is using 'HACS':
+
+- Go to HACS / Integrations
+- Click the 3 dots in the top right
+- Select "Custom repositories"
+- Add the repository URL
+- Select category Integration
+- Click ADD
+- Now from HACS / Integrations you can find Reclaim Energy and click Download
+- Restart Home Assistant
+
+Now you can add the integration using the ADD INTERGATION button in Settings / Devices & services, search for Reclaim Energy.
+It will ask you for your Unique Device ID. This is the 17 digit number found on the sticker on the controller or with the instruction booklet.
