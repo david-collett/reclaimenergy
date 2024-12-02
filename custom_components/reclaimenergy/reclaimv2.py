@@ -141,7 +141,7 @@ class ReclaimState:
         "mode8_day": (
             41000,
             lambda x: ReclaimState.days[x - 1],
-            lambda x: ReclaimState.days.index(x + 1),
+            lambda x: ReclaimState.days.index(x) + 1,
         ),
         "mode8_start": (41001, lambda x: int(x / 256), lambda x: x * 256),
     }
