@@ -187,24 +187,26 @@ class ReclaimV2:
         self.subscribe_topic = f"dontek{hexid}/status/psw"
         self.command_topic = f"dontek{hexid}/cmd/psw"
 
+        # Create SSL context outside the event loop to prevent blocking calls
+        # within the event loop.
+        self.ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        self.ssl_context.load_verify_locations(cafile=self.cacert)
+        self.ssl_context.load_cert_chain(certfile=self.certificate, keyfile=self.key)
+        self.ssl_context.verify_mode = ssl.CERT_REQUIRED
+        self.ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+
     def connect(self, listener: MessageListener) -> None:
         """Connect to MQTT server and subscribe for updates."""
         self._listener_task = asyncio.create_task(self._listen(listener))
 
     async def _listen(self, listener: MessageListener):
-        aws_tls_params = aiomqtt.TLSParameters(
-            ca_certs=self.cacert,
-            certfile=self.certificate,
-            keyfile=self.key,
-            cert_reqs=ssl.CERT_REQUIRED,
-            tls_version=ssl.PROTOCOL_TLSv1_2,
-            ciphers=None,
-        )
         self._connected = True
         while self._connected:
             try:
                 async with aiomqtt.Client(
-                    hostname=AWS_HOSTNAME, port=AWS_PORT, tls_params=aws_tls_params
+                    hostname=AWS_HOSTNAME,
+                    port=AWS_PORT,
+                    tls_context=self.ssl_context,
                 ) as self._client:
                     _LOGGER.debug("Connected, subscribing to %s", self.subscribe_topic)
                     await self._client.subscribe(self.subscribe_topic)
