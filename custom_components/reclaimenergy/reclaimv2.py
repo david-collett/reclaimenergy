@@ -191,20 +191,23 @@ class ReclaimV2:
         """Connect to MQTT server and subscribe for updates."""
         self._listener_task = asyncio.create_task(self._listen(listener))
 
+    def _create_tls_context(self):
+        tls_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+        tls_context.load_verify_locations(cafile=self.cacert)
+        tls_context.load_cert_chain(certfile=self.certificate, keyfile=self.key)
+        tls_context.verify_mode = ssl.CERT_REQUIRED
+        tls_context.minimum_version = ssl.TLSVersion.TLSv1_2
+        return tls_context
+
     async def _listen(self, listener: MessageListener):
-        aws_tls_params = aiomqtt.TLSParameters(
-            ca_certs=self.cacert,
-            certfile=self.certificate,
-            keyfile=self.key,
-            cert_reqs=ssl.CERT_REQUIRED,
-            tls_version=ssl.PROTOCOL_TLSv1_2,
-            ciphers=None,
-        )
+        loop = asyncio.get_running_loop()
+        tls_context = await loop.run_in_executor(None, self._create_tls_context)
+
         self._connected = True
         while self._connected:
             try:
                 async with aiomqtt.Client(
-                    hostname=AWS_HOSTNAME, port=AWS_PORT, tls_params=aws_tls_params
+                    hostname=AWS_HOSTNAME, port=AWS_PORT, tls_context=tls_context
                 ) as self._client:
                     _LOGGER.debug("Connected, subscribing to %s", self.subscribe_topic)
                     await self._client.subscribe(self.subscribe_topic)
