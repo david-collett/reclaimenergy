@@ -66,6 +66,7 @@ class ReclaimV2SensorTemp(ReclaimV2SensorBase):
 
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+    _attr_state_class = SensorStateClass.MEASUREMENT
 
 
 class WaterTempSensor(ReclaimV2SensorTemp):
@@ -127,6 +128,7 @@ class PowerSensor(ReclaimV2SensorBase):
 
     _attr_device_class = SensorDeviceClass.POWER
     _attr_native_unit_of_measurement = UnitOfPower.WATT
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "power"
 
 
@@ -136,6 +138,7 @@ class CurrentSensor(ReclaimV2SensorBase):
     _attr_entity_registry_enabled_default = False
     _attr_device_class = SensorDeviceClass.CURRENT
     _attr_native_unit_of_measurement = UnitOfElectricCurrent.AMPERE
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "current"
 
 
@@ -163,6 +166,7 @@ class WaterPumpSpeed(ReclaimV2SensorBase):
     _attr_entity_registry_enabled_default = False
     _attr_device_class = SensorDeviceClass.SPEED
     _attr_native_unit_of_measurement = "rpm"
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "waterspeed"
 
 
@@ -172,6 +176,7 @@ class CompressorSpeed(ReclaimV2SensorBase):
     _attr_entity_registry_enabled_default = False
     _attr_device_class = SensorDeviceClass.SPEED
     _attr_native_unit_of_measurement = "rpm"
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "compspeed"
 
 
@@ -181,4 +186,5 @@ class FanSpeed(ReclaimV2SensorBase):
     _attr_entity_registry_enabled_default = False
     _attr_device_class = SensorDeviceClass.SPEED
     _attr_native_unit_of_measurement = "rpm"
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "fanspeed"
