@@ -164,7 +164,6 @@ class WaterPumpSpeed(ReclaimV2SensorBase):
     """Represents water pump speed."""
 
     _attr_entity_registry_enabled_default = False
-    _attr_device_class = SensorDeviceClass.SPEED
     _attr_native_unit_of_measurement = "rpm"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "waterspeed"
@@ -174,7 +173,6 @@ class CompressorSpeed(ReclaimV2SensorBase):
     """Represents compressor speed."""
 
     _attr_entity_registry_enabled_default = False
-    _attr_device_class = SensorDeviceClass.SPEED
     _attr_native_unit_of_measurement = "rpm"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "compspeed"
@@ -184,7 +182,6 @@ class FanSpeed(ReclaimV2SensorBase):
     """Represents fan speed."""
 
     _attr_entity_registry_enabled_default = False
-    _attr_device_class = SensorDeviceClass.SPEED
     _attr_native_unit_of_measurement = "rpm"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_translation_key = "fanspeed"
