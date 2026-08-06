@@ -10,6 +10,7 @@ It currently exposes the following entities:
 - Water Temperature (at bottom sensor)
 - Ambient Temperature
 - Heat Pump State (Running / Not Running)
+- Run Status (On, Boost On, On (Legionella), Purging, Off, etc.)
 - Power
 - Boost switch (Current boost state and ability to turn boost on and off)
 
