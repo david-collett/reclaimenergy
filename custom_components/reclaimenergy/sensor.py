@@ -18,6 +18,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .entity import ReclaimV2Entity
+from .reclaimv2 import ReclaimState
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ async def async_setup_entry(
     """Set up the sensor platform."""
     async_add_entities(
         [
+            RunStatusSensor(coordinator=entry.runtime_data),
             WaterTempSensor(coordinator=entry.runtime_data),
             OutletTempSensor(coordinator=entry.runtime_data),
             InletTempSensor(coordinator=entry.runtime_data),
@@ -67,6 +69,14 @@ class ReclaimV2SensorTemp(ReclaimV2SensorBase):
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
     _attr_state_class = SensorStateClass.MEASUREMENT
+
+
+class RunStatusSensor(ReclaimV2SensorBase):
+    """Represents the reason the heat pump is currently running."""
+
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = [*ReclaimState.run_reasons.values(), "Off"]
+    _attr_translation_key = "run_status"
 
 
 class WaterTempSensor(ReclaimV2SensorTemp):

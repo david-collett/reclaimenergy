@@ -23,6 +23,9 @@
             }
         },
         "sensor": {
+            "run_status": {
+                "name": "Run Status"
+            },
             "outlet": {
                 "name": "Outlet Temperature"
             },

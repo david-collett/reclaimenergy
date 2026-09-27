@@ -102,11 +102,26 @@ class ReclaimState:
 
     days = ["Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat"]
 
+    run_reasons = {
+        1: "On",
+        2: "Boost On",
+        3: "On (Legionella)",
+        4: "Purging",
+        5: "On (Inactive)",
+        6: "Boost On (Inactive)",
+        7: "On (Legionella, Inactive)",
+        8: "Purging (Inactive)",
+    }
+
     modbus_map = {
         "mode": (
             40964,
             lambda x: ReclaimState.modes[x - 2],
             lambda x: ReclaimState.modes.index(x) + 2,
+        ),
+        "run_status": (
+            240,
+            lambda x: ReclaimState.run_reasons.get(x, "Off"), None
         ),
         "pump": (200, None, None),
         "case": (50, lambda x: ushort(x) / 2, None),
